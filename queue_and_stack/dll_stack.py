@@ -1,6 +1,9 @@
+from doubly_linked_list import DoublyLinkedList
 import sys
 sys.path.append('../doubly_linked_list')
-from doubly_linked_list import DoublyLinkedList
+
+# LIFO Last in first out
+
 
 class Stack:
     def __init__(self):
