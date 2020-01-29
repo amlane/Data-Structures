@@ -1,7 +1,7 @@
-import sys
-sys.path.append('../queue_and_stack')
-from dll_queue import Queue
-from dll_stack import Stack
+# from dll_stack import Stack
+# from dll_queue import Queue
+# import sys
+# sys.path.append('../queue_and_stack')
 
 
 class BinarySearchTree:
@@ -12,12 +12,52 @@ class BinarySearchTree:
 
     # Insert the given value into the tree
     def insert(self, value):
-        pass
+        # compare the root value to the new value being added
+        if self.value > value:
+            # if the value is less than the root, move left
+            # if no child on that side insert
+            if self.left is None:
+                self.left = BinarySearchTree(value)
+            # else keeping moving left and call insert again
+            else:
+                self.left.insert(value)
+        # if the value is greater than the root, move right
+        elif self.value < value:
+            # if the value is greater than the root, move right
+            # if no child on that side insert
+            if self.right is None:
+                self.right = BinarySearchTree(value)
+            # else keeping moving left and call insert again
+            else:
+                self.right.insert(value)
+        # Return True if the tree contains the value
+        elif self.value == value:
+            return True
+        # False if it does not
+        else:
+            return False
 
-    # Return True if the tree contains the value
-    # False if it does not
     def contains(self, target):
-        pass
+        # look at the root and compare it to  target
+        # if the target is less than the current node value,
+        if target < self.value:
+            # and can move left and repeat
+            if self.left is not None:
+                return self.left.contains(target)
+            else:
+                return False
+        # if the target is greater than the current node value move right and repeat
+        elif target > self.value:
+            if self.right is not None:
+                return self.right.contains(target)
+            else:
+                return False
+        # if the target equals the value return true
+        elif target == self.value:
+            return True
+        # if left and right are None return false
+        else:
+            return False
 
     # Return the maximum value found in the tree
     def get_max(self):
@@ -55,3 +95,10 @@ class BinarySearchTree:
     # Print Post-order recursive DFT
     def post_order_dft(self, node):
         pass
+
+
+root = BinarySearchTree(5)
+root.insert(2)
+root.insert(3)
+root.insert(7)
+root.insert(6)

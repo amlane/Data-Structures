@@ -16,7 +16,10 @@ class LRUCache:
     def __init__(self, limit=10):
         self.limit = limit
         self.size = 0
+        # a doubly-linked list that holds the key-value entries in the correct order
         self.storage = DoublyLinkedList()
+        # a storage dict that provides fast access to every node stored in the cache
+        self.lookup = dict()
 
     """
     Retrieves the value associated with the given key. Also
