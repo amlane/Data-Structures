@@ -17,9 +17,9 @@ class LRUCache:
         self.limit = limit
         self.size = 0
         # a doubly-linked list that holds the key-value entries in the correct order
-        self.storage = DoublyLinkedList()
+        self.order = DoublyLinkedList()
         # a storage dict that provides fast access to every node stored in the cache
-        self.lookup = dict()
+        self.storage = dict()
 
     """
     Retrieves the value associated with the given key. Also
@@ -30,16 +30,11 @@ class LRUCache:
     """
 
     def get(self, key):
-        node = self.storage.head
-        while(node):
-            # If item with key exists,
-            if node.key == key:
-                # return the value and move it to MRU
-                self.storage.move_to_end(node)
-                return node.value
-            else:
-                # Otherwise keep checking until the end of the list
-                node = node.next
+        # If item with key exists,
+        if key in self.storage:
+            # return the value and move it to MRU
+            self.order.move_to_end(self.storage[key])
+            return self.storage[key].value[1]
         # Else return None
         return None
 
@@ -56,25 +51,21 @@ class LRUCache:
 
     def set(self, key, value):
         # check if key already exists
-        node = self.storage.head
-        while(node):
-            if node.key == key:
-                # if the key exists, update the value
-                node.value = value
-                # update to MRU
-                return self.storage.move_to_end(node)
-            else:
-                # Otherwise keep checking until the end of the list
-                node = node.next
-        # If key doesn't exist...
-        # check if list is at it's max size
-        if self.size == self.limit:
-            # remove the oldest entry in the cache
-            self.storage.remove_from_head()
-            # then add the new item to the head
-            return self.storage.add_to_tail(key, value)
-        else:
-            # increment the size counter
-            self.size += 1
-            # add the item to the head
-            return self.storage.add_to_tail(key, value)
+        if key in self.storage:
+            node = self.storage[key]
+            node.value = (key, value)
+            return self.order.move_to_end(node)
+        elif self.size == self.limit:
+            # if at size limit remove LRU from cache
+            del self.storage[self.order.head.value[0]]
+            # and ordered list
+            self.order.remove_from_head()
+            # decrease the size of list
+            self.size -= 1
+        # continue with inserting new item
+        # add item to the head of DLL
+        self.order.add_to_tail((key, value))
+        # store item in dict with key
+        self.storage[key] = self.order.tail
+        # increase size compile
+        self.size += 1
