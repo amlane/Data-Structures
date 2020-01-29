@@ -1,3 +1,9 @@
+
+from doubly_linked_list import DoublyLinkedList
+import sys
+sys.path.append('../doubly_linked_list')
+
+
 class LRUCache:
     """
     Our LRUCache class keeps track of the max number of nodes it
@@ -6,8 +12,11 @@ class LRUCache:
     order, as well as a storage dict that provides fast access
     to every node stored in the cache.
     """
+
     def __init__(self, limit=10):
-        pass
+        self.limit = limit
+        self.size = 0
+        self.storage = DoublyLinkedList()
 
     """
     Retrieves the value associated with the given key. Also
@@ -16,8 +25,20 @@ class LRUCache:
     Returns the value associated with the key or None if the
     key-value pair doesn't exist in the cache.
     """
+
     def get(self, key):
-        pass
+        node = self.storage.head
+        while(node):
+            # If item with key exists,
+            if node.key == key:
+                # return the value and move it to MRU
+                self.storage.move_to_end(node)
+                return node.value
+            else:
+                # Otherwise keep checking until the end of the list
+                node = node.next
+        # Else return None
+        return None
 
     """
     Adds the given key-value pair to the cache. The newly-
@@ -29,5 +50,28 @@ class LRUCache:
     want to overwrite the old value associated with the key with
     the newly-specified value.
     """
+
     def set(self, key, value):
-        pass
+        # check if key already exists
+        node = self.storage.head
+        while(node):
+            if node.key == key:
+                # if the key exists, update the value
+                node.value = value
+                # update to MRU
+                return self.storage.move_to_end(node)
+            else:
+                # Otherwise keep checking until the end of the list
+                node = node.next
+        # If key doesn't exist...
+        # check if list is at it's max size
+        if self.size == self.limit:
+            # remove the oldest entry in the cache
+            self.storage.remove_from_head()
+            # then add the new item to the head
+            return self.storage.add_to_tail(key, value)
+        else:
+            # increment the size counter
+            self.size += 1
+            # add the item to the head
+            return self.storage.add_to_tail(key, value)
