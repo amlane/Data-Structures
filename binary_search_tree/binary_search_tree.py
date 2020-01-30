@@ -13,7 +13,7 @@ class BinarySearchTree:
     # Insert the given value into the tree
     def insert(self, value):
         # compare the root value to the new value being added
-        if self.value > value:
+        if self.value >= value:
             # if the value is less than the root, move left
             # if no child on that side insert
             if self.left is None:
@@ -30,12 +30,6 @@ class BinarySearchTree:
             # else keeping moving left and call insert again
             else:
                 self.right.insert(value)
-        # Return True if the tree contains the value
-        elif self.value == value:
-            return True
-        # False if it does not
-        else:
-            return False
 
     def contains(self, target):
         # look at the root and compare it to  target
